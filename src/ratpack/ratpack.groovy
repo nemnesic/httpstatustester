@@ -1,18 +1,32 @@
 import static ratpack.groovy.Groovy.ratpack
+import static ratpack.groovy.Groovy.groovyTemplate
+import ratpack.groovy.templating.TemplatingModule
 
 ratpack {
+	bindings {
+         add(TemplatingModule) { TemplatingModule.Config config -> config.staticallyCompile = true }
+    }
+
     handlers {
         get() {
-			int status = request.queryParams.status?.toInteger() ?: 200
-			int sleep = request.queryParams.sleep?.toInteger() ?: 0
-			if(sleep){
-				Thread.sleep(sleep)
+		
+			Integer status = request.queryParams.status?.toInteger()
+			if(status){
+					int sleep = request.queryParams.sleep?.toInteger() ?: 0
+					if(sleep){
+						Thread.sleep(sleep)
+					}
+
+					response.headers.set 'Content-Type', 'application/json'
+		            response.status(status)
+
+					render "Status: ${status} ${sleep}"
+			}else{
+		       render groovyTemplate("main.html", title: "Groovy Web Console")
 			}
 			
-			response.headers.set 'Content-Type', 'application/json'
-            response.status(status)
-			
-			render "Status: ${status} ${sleep}"
+			 assets "public"
+		
         }
         
     }
