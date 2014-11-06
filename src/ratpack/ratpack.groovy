@@ -22,7 +22,7 @@ ratpack {
 
 					render "Status: ${status} ${sleep}"
 			}else{
-		       render groovyTemplate("main.html", title: "Groovy Web Console")
+		       render groovyTemplate("main.html")
 			}
 			
 			 assets "public"
