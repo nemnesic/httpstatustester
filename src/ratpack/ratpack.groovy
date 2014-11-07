@@ -11,12 +11,19 @@ ratpack {
         get() {
 		
 			Integer status = request.queryParams.status?.toInteger()
+			def close = request.queryParams.close
+			Integer sleep = request.queryParams.sleep?.toInteger()
+			
+			if(sleep){
+				Thread.sleep(sleep)
+			}
+			
+			if(close){
+				response.headers.set('Content-Length',0)
+				response.send()	
+			}	
+			
 			if(status){
-					int sleep = request.queryParams.sleep?.toInteger() ?: 0
-					if(sleep){
-						Thread.sleep(sleep)
-					}
-
 					response.headers.set 'Content-Type', 'application/json'
 		            response.status(status)
 
